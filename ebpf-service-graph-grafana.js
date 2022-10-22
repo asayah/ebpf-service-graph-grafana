@@ -12,7 +12,6 @@ const prometheus_endpoint = process.env.PROMETHEUS_ENDPOINT;
 const demo = require('./demo');
 const converter = require('./converter');
 
-app.use(express.static('public'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression())
