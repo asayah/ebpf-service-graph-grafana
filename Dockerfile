@@ -1,7 +1,7 @@
 FROM node
 RUN mkdir /ebpf-service-graph-grafana
 ADD ebpf-service-graph-grafana.js /ebpf-service-graph-grafana/
-ADD demo.js /ebpf-service-graph-grafana/
+ADD demo.js converter.js /ebpf-service-graph-grafana/
 ADD package.json /ebpf-service-graph-grafana/
 WORKDIR /ebpf-service-graph-grafana
 RUN npm install .
