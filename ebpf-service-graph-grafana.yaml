@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ebpf-service-graph-grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ebpf-service-graph-grafana
+  template:
+    metadata:
+      labels:
+        app: ebpf-service-graph-grafana
+    spec:
+      serviceAccountName: ebpf-service-graph-grafana
+      containers:
+      - name: ebpf-service-graph-grafana
+        imagePullPolicy: Always
+        image: asayah/ebpf-node-formater:latest
+        command: ["node"]
+        args: ["ebpf-service-graph-grafana.js"]
+        env:
+        - name: PROMETHEUS_ENDPOINT
+          value: "http://prom-kube-prometheus-stack-prometheus.prometheus.svc.cluster.local:9090"
+        ports:
+        - name: http
+          containerPort: 3000
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ebpf-service-graph-grafana
+subjects:
+- kind: ServiceAccount
+  name: ebpf-service-graph-grafana
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ebpf-service-graph-grafana
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ebpf-service-graph-grafana
+spec:
+  type: LoadBalancer
+  selector:
+    app: ebpf-service-graph-grafana
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

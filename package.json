@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "js-yaml": "^4.1.0",
+    "object-hash": "^3.0.0",
+    "sync-request": "^6.1.0",
+    "uuid": "^9.0.0"
+  }
+}
