@@ -96,6 +96,13 @@ function process (data, kubedata) {
             }
         }
     });
+
+    const res = {
+        edges: edges,
+        nodes: nodes
+    }
+
+    return res
 }
 
 
