@@ -58,7 +58,6 @@ function process (data, kubedata) {
             pushIfNotExist(edges, 
                 {
                     id: uuidv4(),
-                    mainStat: "53/s",
                     source: pod_by_ip[event.metric.saddr].status.podIP,
                     target: service_by_ip[event.metric.daddr].spec.clusterIP
                 }),
