@@ -58,13 +58,14 @@ function process (data, kubedata) {
             pushIfNotExist(edges, 
                 {
                     id: uuidv4(),
+                    mainStat: "1/s",
                     source: pod_by_ip[event.metric.saddr].status.podIP,
                     target: service_by_ip[event.metric.daddr].spec.clusterIP
                 }),
-                
-            
+
             pushIfNotExist(edges, 
                 {   id: uuidv4(),
+                    mainStat: "1/s",                    
                     source: service_by_pod[pod_by_ip[event.metric.saddr].status.podIP],
                     target: pod_by_ip[event.metric.saddr].status.podIP
                 }),
@@ -80,8 +81,12 @@ function process (data, kubedata) {
                 pushIfNotExist(nodes,
                     
                     {
-                        id: obj1.status.podIP,
-                        title: obj1.metadata.name
+                        arc__failed: 1,
+                        arc__passed: 0,
+                        detail__zone: "load",                        
+                        subTitle: obj1.metadata.name,                        
+                        title: obj1.metadata.name,
+                        id: obj1.status.podIP
                     })
             }
         }
@@ -89,6 +94,10 @@ function process (data, kubedata) {
             if(obj1.spec.clusterIP in connected_edges) {
                 pushIfNotExist(nodes,
                     {
+                        arc__failed: 1,
+                        arc__passed: 0,
+                        detail__zone: "load",                        
+                        subTitle: obj1.metadata.name,   
                         id: obj1.spec.clusterIP,
                         title: obj1.metadata.name
                 })  
@@ -107,30 +116,57 @@ function process (data, kubedata) {
 
 
 const fields = {
-	"edges_fields": [
-	  {
-		"field_name": "id",
-		"type": "string"
-	  },
-	  {
-		"field_name": "source",
-		"type": "string"
-	  },
-	  {
-		"field_name": "target",
-		"type": "string"
-	  }
-	],
-	"nodes_fields": [
-	  {
-		"field_name": "id",
-		"type": "string"
-	  },
-	  {
-		"field_name": "title",
-		"type": "string"
-	  }
-	]
+    "edges_fields": [
+      {
+        "field_name": "id",
+        "type": "string"
+      },
+      {
+        "field_name": "source",
+        "type": "string"
+      },
+      {
+        "field_name": "target",
+        "type": "string"
+      },
+      {
+        "field_name": "mainStat",
+        "type": "number"
+      }
+    ],
+    "nodes_fields": [
+      {
+        "field_name": "id",
+        "type": "string"
+      },
+      {
+        "field_name": "title",
+        "type": "string"
+      },
+      {
+        "field_name": "mainStat",
+        "type": "string"
+      },
+      {
+        "field_name": "secondaryStat",
+        "type": "number"
+      },
+      {
+        "color": "red",
+        "field_name": "arc__failed",
+        "type": "number"
+      },
+      {
+        "color": "green",
+        "field_name": "arc__passed",
+        "type": "number"
+      },
+      {
+        "displayName": "Role",
+        "field_name": "detail__role",
+        "type": "string"
+      }
+    ]
   }
 
 
